@@ -44,10 +44,10 @@ export default function BookingForm() {
       <div className="max-w-4xl mx-auto px-8 relative z-10">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-medium text-text-dark mb-4">
-            Book an Appointment
+            Book or Contact Us
           </h2>
           <p className="text-lg text-gray-500">
-            Secure your spot with us. Fill out the form below and we will confirm your appointment shortly.
+            Have a question or ready to visit? Fill out the form below and we will get back to you shortly.
           </p>
         </div>
 
@@ -55,20 +55,33 @@ export default function BookingForm() {
 
 
           {submitted ? (
-            <div className="text-center py-16 fade-in-up">
-              <div className="text-6xl mb-6">✨</div>
-              <h3 className="text-3xl font-medium text-text-dark mb-4">
-                Thank You!
+            <div className="text-center py-12 md:py-20 fade-in-up">
+              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-primary/10 mb-8">
+                <span className="text-5xl">✨</span>
+              </div>
+              <h3 className="text-3xl md:text-4xl font-medium text-text-dark mb-4">
+                Message Sent!
               </h3>
-              <p className="text-gray-600 text-lg">
-                Your appointment request has been successfully received. We will contact you soon.
+              <p className="text-gray-600 text-lg max-w-md mx-auto mb-10 leading-relaxed">
+                Thank you for reaching out to Essence. We&apos;ve received your request and will get back to you shortly to confirm your visit.
               </p>
-              <button
-                onClick={() => setSubmitted(false)}
-                className="mt-8 text-primary font-medium hover:text-secondary transition-colors"
-              >
-                Book another appointment
-              </button>
+              
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a 
+                  href="https://www.instagram.com/essencemakeupstudio" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-primary text-text-light px-8 py-3 rounded-full font-medium border-2 border-primary transition-all duration-300 hover:bg-transparent hover:text-primary"
+                >
+                  Follow our Work
+                </a>
+                <button
+                  onClick={() => setSubmitted(false)}
+                  className="text-gray-500 font-medium hover:text-primary transition-colors py-3"
+                >
+                  Send another message
+                </button>
+              </div>
             </div>
           ) : (
             <form
@@ -131,6 +144,8 @@ export default function BookingForm() {
                     <option value="Hydra facial">Hydra facial</option>
                     <option value="Makeup photoshoot">Makeup photoshoot</option>
                     <option value="Jewelry photoshoot">Jewelry photoshoot</option>
+                    <option value="Others (Mention in message field)">Others (Mention in message field)</option>
+
                   </select>
                 </div>
 
@@ -171,7 +186,7 @@ export default function BookingForm() {
                   type="submit"
                   className="bg-primary text-text-light px-10 py-4 rounded-full font-medium border-2 border-primary transition-all duration-300 hover:bg-transparent hover:text-primary w-full md:w-auto text-lg shadow-[0_10px_20px_rgba(138,154,134,0.3)] hover:shadow-none hover:-translate-y-1"
                 >
-                  Confirm Booking
+                  Send Message / Book Now
                 </button>
               </div>
             </form>

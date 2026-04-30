@@ -69,7 +69,7 @@ export default function Navbar() {
               href="#contact"
               className="bg-primary text-text-light px-6 py-3 rounded-full font-medium border-2 border-primary transition-all duration-300 hover:bg-transparent hover:text-primary inline-block"
             >
-              Book Now
+              Book / Contact
             </Link>
           </li>
         </ul>
@@ -124,7 +124,7 @@ export default function Navbar() {
                 onClick={() => setIsOpen(false)}
                 className="bg-primary text-text-light px-8 py-3 rounded-full font-medium border-2 border-primary"
               >
-                Book Now
+                Book / Contact
               </Link>
             </li>
           </ul>
