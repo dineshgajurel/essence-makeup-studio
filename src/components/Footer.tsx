@@ -37,7 +37,17 @@ export default function Footer() {
         </div>
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10 text-gray-500 text-sm gap-4">
           <div>&copy; 2026 Essence Unisex Studio. All Rights Reserved.</div>
-          <div>Made with ❤️ for Beauty Lovers</div>
+          <div className="flex items-center gap-1">
+            Made with ❤️ for your inner & outer beauty | Developed by{" "}
+            <a 
+              href="https://www.gajureldns.com.np/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors font-medium underline decoration-primary/30"
+            >
+              Dinesh Gajurel
+            </a>
+          </div>
         </div>
       </div>
     </footer>
