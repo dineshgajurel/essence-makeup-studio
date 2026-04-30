@@ -99,7 +99,7 @@ export default function BookingForm() {
                     id="name"
                     name="entry.484721197"
                     required
-                    placeholder="John Doe"
+                    placeholder="Your Full Name"
                     className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-text-dark focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                   />
                 </div>
@@ -114,7 +114,7 @@ export default function BookingForm() {
                     id="phone"
                     name="entry.2021905219"
                     required
-                    placeholder="+977 9800000000"
+                    placeholder="9XXXXXXXXX"
                     className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-text-dark focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                   />
                 </div>
@@ -175,7 +175,7 @@ export default function BookingForm() {
                   id="message"
                   name="entry.259641505"
                   rows={4}
-                  placeholder="Tell us about any specific preferences or questions..."
+                  placeholder="Any specific services or questions? e.g. Bridal makeup for Saturday"
                   className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-text-dark focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"
                 ></textarea>
               </div>
