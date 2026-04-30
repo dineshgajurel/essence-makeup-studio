@@ -130,6 +130,20 @@ export default function BookingForm() {
 
 
 
+              {/* Special Requests */}
+              <div className="flex flex-col">
+                <label htmlFor="message" className="text-sm font-medium text-text-dark mb-2 ml-1">
+                  Special Requests / Message
+                </label>
+                <textarea
+                  id="message"
+                  name="entry.259641505"
+                  rows={4}
+                  placeholder="Tell us about any specific preferences or questions..."
+                  className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-text-dark focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none"
+                ></textarea>
+              </div>
+
               {/* Submit Button */}
               <div className="mt-4 text-center">
                 <button
