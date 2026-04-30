@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Plus, Search, Filter, MoreVertical, Edit2, Trash2, AlertCircle, ArrowUpRight, ArrowDownRight, Package, Save, X, History } from "lucide-react";
+import { Plus, Search, Filter, MoreVertical, Edit2, Trash2, AlertCircle, ArrowUpRight, ArrowDownRight, Package, Save, X, History, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
 
@@ -19,20 +19,24 @@ export default function StockManagement() {
   const [categories, setCategories] = useState<string[]>(["All"]);
   const [activeCategory, setActiveCategory] = useState("All");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 25;
   
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isAdjustModalOpen, setIsAdjustModalOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [adjustType, setAdjustType] = useState<'IN' | 'OUT'>('IN');
   
   const [formData, setFormData] = useState({
     name: "",
-    category: "",
+    category: "General",
     stock: "",
     price: "",
     min_stock_threshold: "5"
   });
+
+  const [categoryName, setCategoryName] = useState("");
 
   const [adjustData, setAdjustData] = useState({
     quantity: "1",
@@ -67,6 +71,23 @@ export default function StockManagement() {
       if (data) setCategories(["All", ...data.map(c => c.name)]);
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleAddCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!categoryName) return;
+    try {
+      const { error } = await supabase
+        .from("categories")
+        .insert([{ name: categoryName }]);
+
+      if (error) throw error;
+      setCategoryName("");
+      setIsCategoryModalOpen(false);
+      fetchCategories();
+    } catch (err: any) {
+      alert(err.message);
     }
   };
 
@@ -166,13 +187,24 @@ export default function StockManagement() {
       </div>
 
       {/* Filter Bar */}
-      <div className="flex gap-2 overflow-x-auto pb-4 no-scrollbar -mx-6 px-6">
+      <div className="flex items-center gap-3 overflow-x-auto pb-4 no-scrollbar -mx-6 px-6">
+        <button
+          onClick={() => setIsCategoryModalOpen(true)}
+          className="flex-none w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-primary hover:bg-primary/10 transition-all shadow-xl"
+          title="Add Category"
+        >
+          <Plus size={20} />
+        </button>
+        <div className="h-6 w-px bg-white/10 flex-none mx-1"></div>
         {categories.map((cat) => (
           <button
             key={cat}
-            onClick={() => setActiveCategory(cat)}
+            onClick={() => {
+              setActiveCategory(cat);
+              setCurrentPage(1);
+            }}
             className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${
-              activeCategory === cat ? "bg-primary text-black" : "bg-white/5 text-gray-500 hover:text-white"
+              activeCategory === cat ? "bg-primary text-black shadow-lg shadow-primary/20" : "bg-white/5 text-gray-500 hover:text-white border border-white/5"
             }`}
           >
             {cat}
@@ -195,6 +227,7 @@ export default function StockManagement() {
             <tbody className="divide-y divide-white/5">
               {stock
                 .filter(item => activeCategory === "All" || item.category === activeCategory)
+                .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
                 .map((item) => (
                 <tr key={item.id} className="hover:bg-white/[0.02] transition-colors group">
                   <td className="px-6 md:px-10 py-8">
@@ -233,6 +266,42 @@ export default function StockManagement() {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Controls */}
+        {stock.filter(item => activeCategory === "All" || item.category === activeCategory).length > itemsPerPage && (
+          <div className="px-6 md:px-10 py-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4 bg-white/[0.02]">
+            <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">
+              {(() => {
+                const filtered = stock.filter(item => activeCategory === "All" || item.category === activeCategory);
+                return (
+                  <>Showing <span className="text-white">{(currentPage - 1) * itemsPerPage + 1}</span> - <span className="text-white">{Math.min(currentPage * itemsPerPage, filtered.length)}</span> of <span className="text-white">{filtered.length}</span> Products</>
+                );
+              })()}
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-all"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black text-white uppercase tracking-widest">
+                Page {currentPage} of {Math.ceil(stock.filter(item => activeCategory === "All" || item.category === activeCategory).length / itemsPerPage)}
+              </div>
+              <button
+                onClick={() => {
+                  const maxPage = Math.ceil(stock.filter(item => activeCategory === "All" || item.category === activeCategory).length / itemsPerPage);
+                  setCurrentPage(prev => Math.min(maxPage, prev + 1));
+                }}
+                disabled={currentPage >= Math.ceil(stock.filter(item => activeCategory === "All" || item.category === activeCategory).length / itemsPerPage)}
+                className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-all"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Adjust Stock Modal */}
@@ -348,10 +417,77 @@ export default function StockManagement() {
                   />
                 </div>
 
+                <div className="space-y-2 sm:col-span-2">
+                  <div className="flex justify-between items-end mb-1">
+                    <label className="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-1">Category</label>
+                    <button 
+                      type="button"
+                      onClick={() => setIsCategoryModalOpen(true)}
+                      className="text-[9px] font-black uppercase tracking-widest text-primary hover:underline transition-all"
+                    >
+                      + Create New Category
+                    </button>
+                  </div>
+                  <div className="relative">
+                    <select 
+                      required
+                      value={formData.category}
+                      onChange={e => setFormData({...formData, category: e.target.value})}
+                      className="w-full bg-white/5 border border-white/10 rounded-[18px] sm:rounded-[24px] px-6 sm:px-8 py-4 sm:py-5 focus:outline-none focus:border-primary/50 text-white font-bold appearance-none"
+                    >
+                      {categories.filter(c => c !== "All").map(cat => (
+                        <option key={cat} value={cat} className="bg-black">{cat}</option>
+                      ))}
+                    </select>
+                    <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                      <Filter size={16} />
+                    </div>
+                  </div>
+                </div>
+
                 <button 
                   className="sm:col-span-2 bg-primary text-black font-black py-5 sm:py-6 rounded-[20px] sm:rounded-[28px] hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-3 shadow-2xl shadow-primary/20 uppercase tracking-[0.2em] text-[10px]"
                 >
                   Create Product
+                </button>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+      {/* Category Modal */}
+      <AnimatePresence>
+        {isCategoryModalOpen && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 sm:p-6 bg-black/95 backdrop-blur-xl">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="w-full max-w-md bg-[#050505] border border-white/10 rounded-[32px] p-8 sm:p-10 shadow-2xl relative overflow-hidden"
+            >
+              <div className="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-xl sm:text-2xl font-black tracking-tighter text-white uppercase">New Category</h3>
+                <button onClick={() => setIsCategoryModalOpen(false)} className="text-gray-500 hover:text-white transition-all">
+                  <X size={24} />
+                </button>
+              </div>
+
+              <form onSubmit={handleAddCategory} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-1">Category Name</label>
+                  <input 
+                    required
+                    autoFocus
+                    type="text" 
+                    value={categoryName}
+                    onChange={e => setCategoryName(e.target.value)}
+                    placeholder="e.g. Tools, Skincare..."
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:border-primary text-white font-bold"
+                  />
+                </div>
+                <button className="w-full bg-primary text-black font-black py-4 rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all uppercase tracking-widest text-[10px]">
+                  Create Category
                 </button>
               </form>
             </motion.div>

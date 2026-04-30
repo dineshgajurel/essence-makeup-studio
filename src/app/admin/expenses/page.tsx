@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Wallet, Calendar, Tag, CreditCard, Save, History, AlertCircle, ChevronDown, Filter, X } from "lucide-react";
+import { Wallet, Calendar, Tag, CreditCard, Save, History, AlertCircle, ChevronDown, Filter, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
 
@@ -29,6 +29,9 @@ export default function ExpensesManagement() {
   const [categories, setCategories] = useState<string[]>(["Rent", "Electricity", "Supplies", "Marketing", "Staff Salary", "Other"]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 25;
   
   const [formData, setFormData] = useState({
     amount: "",
@@ -40,6 +43,7 @@ export default function ExpensesManagement() {
 
   useEffect(() => {
     fetchExpenses();
+    setCurrentPage(1);
   }, [timeRange, customRange]);
 
   const fetchExpenses = async () => {
@@ -102,6 +106,8 @@ export default function ExpensesManagement() {
       if (data) {
         setExpenses([data[0], ...expenses]);
         setFormData({ ...formData, amount: "", description: "" });
+        setSuccess("Expense recorded successfully!");
+        setTimeout(() => setSuccess(""), 3000);
       }
     } catch (err: any) {
       setError(err.message);
@@ -119,6 +125,17 @@ export default function ExpensesManagement() {
           <AlertCircle size={18} />
           {error}
         </div>
+      )}
+
+      {success && (
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-green-500/10 border border-green-500/20 text-green-400 p-4 rounded-2xl flex items-center gap-3 text-sm"
+        >
+          <Save size={18} />
+          {success}
+        </motion.div>
       )}
 
       {/* Entry Section */}
@@ -280,7 +297,7 @@ export default function ExpensesManagement() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {expenses.map((exp) => (
+                {expenses.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((exp) => (
                   <tr key={exp.id} className="hover:bg-white/[0.02] transition-colors group">
                     <td className="px-6 md:px-10 py-6 md:py-8 text-sm font-bold text-gray-500 whitespace-nowrap">
                       {new Date(exp.date).toLocaleDateString()}
@@ -309,6 +326,34 @@ export default function ExpensesManagement() {
               </tbody>
             </table>
           </div>
+
+          {/* Pagination Controls */}
+          {expenses.length > itemsPerPage && (
+            <div className="px-6 md:px-10 py-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4 bg-white/[0.02]">
+              <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">
+                Showing <span className="text-white">{(currentPage - 1) * itemsPerPage + 1}</span> - <span className="text-white">{Math.min(currentPage * itemsPerPage, expenses.length)}</span> of <span className="text-white">{expenses.length}</span> Records
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-all"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black text-white uppercase tracking-widest">
+                  Page {currentPage} of {Math.ceil(expenses.length / itemsPerPage)}
+                </div>
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(Math.ceil(expenses.length / itemsPerPage), prev + 1))}
+                  disabled={currentPage >= Math.ceil(expenses.length / itemsPerPage)}
+                  className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-all"
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

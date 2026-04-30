@@ -12,6 +12,7 @@ import {
   Menu, 
   X,
   ChevronRight,
+  ChevronLeft,
   DollarSign,
   Wallet
 } from "lucide-react";
@@ -30,7 +31,7 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isDesktop, setIsDesktop] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
@@ -41,13 +42,6 @@ export default function AdminLayout({
     const handleResize = () => {
       const desktop = window.innerWidth >= 1024;
       setIsDesktop(desktop);
-      // On desktop, keep sidebar open (collapsed or full)
-      // On mobile, start closed
-      if (desktop) {
-        setIsSidebarOpen(true);
-      } else {
-        setIsSidebarOpen(false);
-      }
     };
     
     handleResize();
@@ -72,7 +66,8 @@ export default function AdminLayout({
 
   // Close sidebar on mobile when navigating
   useEffect(() => {
-    if (!isDesktop) {
+    // Only auto-close on mobile when navigating
+    if (!isDesktop && window.innerWidth < 1024) {
       setIsSidebarOpen(false);
     }
   }, [pathname, isDesktop]);
@@ -95,7 +90,7 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] flex text-white font-main relative">
+    <div className="min-h-screen bg-[#050505] flex text-white font-main relative overflow-x-hidden">
       
       {/* 1. MOBILE DRAWER OVERLAY */}
       <AnimatePresence>
@@ -118,7 +113,7 @@ export default function AdminLayout({
             : (isSidebarOpen ? "w-72 translate-x-0 shadow-2xl" : "w-72 -translate-x-full")
           } 
           lg:relative lg:translate-x-0
-          ${isDesktop ? "overflow-visible" : "overflow-hidden"}
+          ${isDesktop ? "overflow-visible" : "overflow-x-hidden overflow-y-auto"}
         `}
       >
         {/* Logo Area */}
@@ -141,12 +136,12 @@ export default function AdminLayout({
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center gap-4 px-4 py-4 rounded-2xl transition-all duration-300 group relative
+                className={`flex items-center gap-4 py-4 rounded-2xl transition-all duration-300 group relative
                   ${isActive 
                     ? "bg-primary text-black shadow-xl shadow-primary/20" 
                     : "text-gray-500 hover:bg-white/5 hover:text-white"
                   } 
-                  ${!isSidebarOpen && isDesktop ? "justify-center" : "justify-start"}
+                  ${isSidebarOpen ? "justify-start px-4" : "justify-center px-0"}
                 `}
               >
                 <item.icon size={22} className={`shrink-0 ${isActive ? "scale-110" : "group-hover:scale-110 transition-transform"}`} />
@@ -172,17 +167,34 @@ export default function AdminLayout({
         </nav>
 
         {/* Footer Actions */}
-        <div className="p-4 border-t border-white/10 shrink-0">
+        <div className="p-3 border-t border-white/10 shrink-0 space-y-2">
+          {isDesktop && (
+            <button 
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="flex items-center justify-center p-4 w-full rounded-2xl text-gray-500 hover:bg-white/5 hover:text-white transition-all duration-300 group relative"
+            >
+              <div className={`transition-transform duration-500 ${isSidebarOpen ? "rotate-0" : "rotate-180"}`}>
+                <ChevronLeft size={22} />
+              </div>
+
+              {/* Toggle Tooltip */}
+              <div className="absolute left-full ml-4 px-4 py-2 bg-black border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-white opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-300 translate-x-[-10px] group-hover:translate-x-0 shadow-2xl z-[120] whitespace-nowrap">
+                {isSidebarOpen ? "Collapse" : "Expand"}
+                <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-black border-l border-b border-white/10 rotate-45"></div>
+              </div>
+            </button>
+          )}
+
           <button 
             onClick={handleLogout}
-            className={`flex items-center gap-4 px-4 py-4 w-full rounded-2xl text-red-400 hover:bg-red-400/10 transition-all duration-300 group relative
-              ${!isSidebarOpen && isDesktop ? "justify-center" : "justify-start"}
+            className={`flex items-center gap-4 py-4 w-full rounded-2xl text-red-400 hover:bg-red-400/10 transition-all duration-300 group relative
+              ${!isSidebarOpen && isDesktop ? "justify-center px-0" : "justify-start px-4"}
             `}
           >
             <LogOut size={22} className="shrink-0" />
-            {isSidebarOpen && (
+            {(isDesktop && isSidebarOpen) || (!isDesktop && isSidebarOpen) ? (
               <span className="font-black text-[10px] uppercase tracking-widest whitespace-nowrap overflow-hidden">Logout</span>
-            )}
+            ) : null}
             
             {/* Desktop Logout Tooltip */}
             {!isSidebarOpen && isDesktop && (

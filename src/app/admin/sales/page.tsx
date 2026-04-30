@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { DollarSign, Calendar, Tag, CreditCard, Save, History, AlertCircle, ChevronDown, Filter, X } from "lucide-react";
+import { DollarSign, Calendar, Tag, CreditCard, Save, History, AlertCircle, ChevronDown, Filter, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabase";
 
@@ -30,17 +30,23 @@ export default function SalesManagement() {
   const [categories, setCategories] = useState<string[]>(["General Service", "Product Sale"]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   
   const [formData, setFormData] = useState({
     amount: "",
     category: "General Service",
+    customCategory: "",
     description: "",
     payment_method: "cash",
     date: new Date().toISOString().split('T')[0]
   });
+  const [showCustomCategory, setShowCustomCategory] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 25;
 
   useEffect(() => {
     fetchInitialData();
+    setCurrentPage(1);
   }, [timeRange, customRange]);
 
   const fetchInitialData = async () => {
@@ -97,7 +103,7 @@ export default function SalesManagement() {
         .insert([{
           amount: parseFloat(formData.amount),
           type: saleType,
-          category: formData.category,
+          category: showCustomCategory ? formData.customCategory : formData.category,
           description: formData.description,
           payment_method: formData.payment_method,
           created_at: formData.date
@@ -108,10 +114,17 @@ export default function SalesManagement() {
 
       if (data) {
         setSales([data[0], ...sales]);
-        setFormData({ ...formData, amount: "", description: "" });
+        setFormData({ ...formData, amount: "", description: "", customCategory: "" });
+        setShowCustomCategory(false);
+        setSuccess("Sale recorded successfully!");
+        setTimeout(() => setSuccess(""), 3000);
       }
     } catch (err: any) {
-      setError(err.message);
+      if (err.message?.includes('sales_type_check')) {
+        setError("Invalid sale type selected.");
+      } else {
+        setError(err.message);
+      }
     } finally {
       setIsSaving(false);
     }
@@ -126,6 +139,17 @@ export default function SalesManagement() {
           <AlertCircle size={18} />
           {error}
         </div>
+      )}
+
+      {success && (
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-green-500/10 border border-green-500/20 text-green-400 p-4 rounded-2xl flex items-center gap-3 text-sm"
+        >
+          <Save size={18} />
+          {success}
+        </motion.div>
       )}
 
       {/* Entry Section */}
@@ -178,12 +202,39 @@ export default function SalesManagement() {
             <label className="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-1">Category</label>
             <select 
               value={formData.category}
-              onChange={e => setFormData({...formData, category: e.target.value})}
+              onChange={e => {
+                const val = e.target.value;
+                setFormData({...formData, category: val});
+                setShowCustomCategory(val === "Other");
+              }}
               className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:border-primary/50 text-white font-bold appearance-none"
             >
-              {categories.map(cat => <option key={cat} value={cat} className="bg-black">{cat}</option>)}
+              {["General Service", "Product Sales", "Hair", "Makeup", "Nails", "Lashes", "Waxing", "Facial", "Other"].map(cat => (
+                <option key={cat} value={cat} className="bg-black">{cat}</option>
+              ))}
             </select>
           </div>
+
+          <AnimatePresence>
+            {showCustomCategory && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="space-y-2"
+              >
+                <label className="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-1">Custom Category Name</label>
+                <input 
+                  required
+                  type="text" 
+                  value={formData.customCategory}
+                  onChange={e => setFormData({...formData, customCategory: e.target.value})}
+                  placeholder="Enter name..."
+                  className="w-full bg-white/5 border border-primary/30 rounded-2xl px-6 py-4 focus:outline-none focus:border-primary text-white font-bold"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="space-y-2">
             <label className="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-1">Payment</label>
@@ -209,22 +260,20 @@ export default function SalesManagement() {
           </div>
 
           <div className="sm:col-span-2 lg:col-span-3 space-y-2">
-            <label className="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-1">
-              {saleType === "daily" ? "Summary Description" : "Customer / Service Details"}
-            </label>
+            <label className="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-1">Summary Description</label>
             <input 
               required
               type="text" 
               value={formData.description}
               onChange={e => setFormData({...formData, description: e.target.value})}
-              placeholder={saleType === "daily" ? "e.g. Total sales for Monday" : "e.g. Haircut - Rahul"}
+              placeholder="e.g. Bridal Makeup - Sita"
               className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:outline-none focus:border-primary/50 text-white"
             />
           </div>
 
           <button 
             disabled={isSaving}
-            className="sm:col-span-2 lg:col-span-1 bg-primary text-black font-black rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-xl shadow-primary/10 h-[58px] uppercase tracking-widest text-[10px]"
+            className="sm:col-span-2 lg:col-span-1 bg-primary text-black font-black rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-xl shadow-primary/10 h-[58px] uppercase tracking-widest text-[10px] self-end"
           >
             {isSaving ? <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div> : <><Save size={18} /> POST SALE</>}
           </button>
@@ -309,7 +358,7 @@ export default function SalesManagement() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {sales.map((sale) => (
+                {sales.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((sale) => (
                   <tr key={sale.id} className="hover:bg-white/[0.02] transition-colors group">
                     <td className="px-6 md:px-10 py-6 md:py-8 text-sm font-bold text-gray-500">
                       {new Date(sale.created_at).toLocaleDateString()}
@@ -342,6 +391,34 @@ export default function SalesManagement() {
               </tbody>
             </table>
           </div>
+          
+          {/* Pagination Controls */}
+          {sales.length > itemsPerPage && (
+            <div className="px-6 md:px-10 py-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4 bg-white/[0.02]">
+              <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">
+                Showing <span className="text-white">{(currentPage - 1) * itemsPerPage + 1}</span> - <span className="text-white">{Math.min(currentPage * itemsPerPage, sales.length)}</span> of <span className="text-white">{sales.length}</span> Records
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-all"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <div className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black text-white uppercase tracking-widest">
+                  Page {currentPage} of {Math.ceil(sales.length / itemsPerPage)}
+                </div>
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(Math.ceil(sales.length / itemsPerPage), prev + 1))}
+                  disabled={currentPage >= Math.ceil(sales.length / itemsPerPage)}
+                  className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-all"
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
