@@ -9,7 +9,7 @@ export default function Hero() {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/hero-bg.png"
+          src="/hero-bg-v2.png"
           alt="Essence Luxury Background"
           fill
           className="object-cover brightness-[0.7]"
