@@ -76,55 +76,55 @@ export default function Navbar() {
           />
         </Link>
 
-        {/* Desktop Menu */}
-        <ul className="hidden md:flex items-center gap-6 lg:gap-10">
-          {navLinks.map((link) => (
-            <li key={link.name}>
-              {link.name === "Contact" ? (
-                <div className="flex items-center gap-6 lg:gap-8 ml-4">
-                  {/* Social Links Desktop */}
-                  <div className="flex items-center gap-4 border-r border-white/10 pr-6">
-                    {socialLinks.map((social) => (
-                      <a
-                        key={social.name}
-                        href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="transition-all duration-300 text-white/80 hover:text-primary hover:scale-110"
-                        title={social.name}
-                      >
-                        <social.icon size={20} />
-                      </a>
-                    ))}
-                  </div>
+        <div className="flex items-center gap-2 sm:gap-8 flex-1 justify-end">
+          {/* Social Links - Always Visible */}
+          <div className="flex items-center gap-3 sm:gap-5 border-r border-white/10 pr-4 sm:pr-8 mr-2 sm:mr-0">
+            {socialLinks.map((social) => (
+              <a
+                key={social.name}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-all duration-300 text-white hover:text-primary hover:scale-110"
+                title={social.name}
+              >
+                <social.icon size={20} />
+              </a>
+            ))}
+          </div>
 
+          {/* Desktop Menu */}
+          <ul className="hidden md:flex items-center gap-6 lg:gap-10">
+            {navLinks.map((link) => (
+              <li key={link.name}>
+                {link.name === "Contact" ? (
                   <Link
                     href={link.href}
-                    className={`rounded-full font-black uppercase tracking-[0.25em] bg-white text-black hover:bg-primary hover:text-black transition-all duration-500 shadow-xl shadow-white/5 active:scale-95 whitespace-nowrap px-10 py-3.5 text-[11px]`}
+                    className="rounded-full font-black uppercase tracking-[0.25em] bg-white text-black hover:bg-primary hover:text-black transition-all duration-500 shadow-xl shadow-white/5 active:scale-95 whitespace-nowrap px-10 py-3.5 text-[11px]"
                   >
                     Book Now / Contact
                   </Link>
-                </div>
-              ) : (
-                <Link
-                  href={link.href}
-                  className={`font-black uppercase tracking-[0.3em] transition-all duration-300 relative group py-2 text-[12px] text-white hover:text-primary`}
-                >
-                  {link.name}
-                  <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-500 group-hover:w-full group-hover:h-1`}></span>
-                </Link>
-              )}
-            </li>
-          ))}
-        </ul>
+                ) : (
+                  <Link
+                    href={link.href}
+                    className="font-black uppercase tracking-[0.3em] transition-all duration-300 relative group py-2 text-[12px] text-white hover:text-primary"
+                  >
+                    {link.name}
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-500 group-hover:w-full group-hover:h-1"></span>
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
 
-        {/* Mobile Toggle */}
-        <button
-          className="md:hidden relative z-[110] p-2 text-white hover:text-primary transition-colors"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
+          {/* Mobile Toggle */}
+          <button
+            className="md:hidden relative z-[110] p-2 text-white hover:text-primary transition-colors"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
 
         {/* Mobile Menu Overlay */}
         <AnimatePresence>
