@@ -40,7 +40,7 @@ export default function AdminDashboard() {
     setLoading(true);
     try {
       const now = new Date();
-      let startDate = new Date(0); // Default to "all time"
+      let startDate = new Date(0); 
 
       if (timeRange === "today") {
         startDate = new Date(now.setHours(0, 0, 0, 0));
@@ -54,7 +54,6 @@ export default function AdminDashboard() {
 
       const isoDate = startDate.toISOString();
 
-      // 1. Fetch Sales in range
       const { data: sales } = await supabase
         .from("sales")
         .select("amount")
@@ -62,7 +61,6 @@ export default function AdminDashboard() {
       
       const totalRevenue = (sales || []).reduce((sum, s) => sum + Number(s.amount), 0);
 
-      // 2. Fetch Expenses in range
       const { data: expenses } = await supabase
         .from("expenses")
         .select("amount")
@@ -70,7 +68,6 @@ export default function AdminDashboard() {
       
       const totalExpenses = (expenses || []).reduce((sum, e) => sum + Number(e.amount), 0);
 
-      // 3. Fetch Stock warnings (all time)
       const { data: products } = await supabase
         .from("products")
         .select("stock, min_stock_threshold");
@@ -123,20 +120,20 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="space-y-12 pb-20">
+    <div className="space-y-8 md:space-y-12 pb-20">
       {/* Header & Advanced Filter */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-        <div>
-          <h2 className="text-5xl font-black tracking-tighter text-white">Dashboard</h2>
-          <p className="text-gray-500 mt-2 text-sm uppercase tracking-widest font-bold">Essence Unisex Studio Analytics</p>
+        <div className="w-full md:w-auto">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-white">Dashboard</h2>
+          <p className="text-gray-500 mt-2 text-[10px] sm:text-xs uppercase tracking-widest font-bold">Essence Unisex Studio Analytics</p>
         </div>
         
-        <div className="flex bg-white/5 p-1 rounded-2xl border border-white/10 backdrop-blur-xl">
+        <div className="flex bg-white/5 p-1 rounded-2xl border border-white/10 backdrop-blur-xl w-full md:w-auto overflow-x-auto no-scrollbar">
           {(["today", "week", "month", "all"] as TimeRange[]).map((range) => (
             <button 
               key={range}
               onClick={() => setTimeRange(range)}
-              className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+              className={`flex-1 md:flex-none px-4 sm:px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${
                 timeRange === range ? "bg-primary text-black" : "text-gray-500 hover:text-white"
               }`}
             >
@@ -147,33 +144,35 @@ export default function AdminDashboard() {
       </div>
 
       {/* Primary Summary Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         {mainStats.map((stat, index) => (
           <Link href={stat.link} key={stat.name}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-white/5 border border-white/10 rounded-[48px] p-10 relative overflow-hidden group hover:border-primary/40 hover:bg-white/[0.08] transition-all cursor-pointer"
+              className="bg-white/5 border border-white/10 rounded-[32px] md:rounded-[48px] p-6 sm:p-10 relative overflow-hidden group hover:border-primary/40 hover:bg-white/[0.08] transition-all cursor-pointer h-full"
             >
               <div className={`absolute -right-8 -top-8 w-40 h-40 ${stat.bg} rounded-full blur-3xl group-hover:scale-125 transition-all duration-700`}></div>
               
-              <div className="flex justify-between items-center mb-10">
-                <div className={`p-5 rounded-[24px] ${stat.bg} ${stat.color} shadow-lg shadow-black/20`}>
-                  <stat.icon size={28} />
+              <div className="flex justify-between items-center mb-8 sm:mb-10 relative z-10">
+                <div className={`p-4 sm:p-5 rounded-[20px] sm:rounded-[24px] ${stat.bg} ${stat.color} shadow-lg shadow-black/20`}>
+                  <stat.icon size={24} />
                 </div>
-                <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-gray-500 group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all">
-                  <ChevronRight size={20} />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-white/10 flex items-center justify-center text-gray-500 group-hover:bg-primary group-hover:text-black group-hover:border-primary transition-all">
+                  <ChevronRight size={18} />
                 </div>
               </div>
               
-              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-2">{stat.name}</p>
-              <h3 className="text-4xl font-black text-white tracking-tighter mb-4">{stat.value}</h3>
-              
-              <div className="flex items-center gap-2 text-[10px] font-bold text-gray-600 uppercase tracking-widest">
-                <span className={stat.color}>{stat.desc}</span>
-                <span>•</span>
-                <span>In {timeRange}</span>
+              <div className="relative z-10">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 mb-2">{stat.name}</p>
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tighter mb-4">{stat.value}</h3>
+                
+                <div className="flex items-center gap-2 text-[10px] font-bold text-gray-600 uppercase tracking-widest">
+                  <span className={stat.color}>{stat.desc}</span>
+                  <span>•</span>
+                  <span>{timeRange}</span>
+                </div>
               </div>
             </motion.div>
           </Link>
@@ -181,17 +180,17 @@ export default function AdminDashboard() {
       </div>
 
       {/* Bottom Insights */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
         {/* Inventory Health */}
         <Link href="/admin/stock" className="block">
-          <div className="bg-white/5 border border-white/10 rounded-[40px] p-8 flex items-center justify-between group hover:bg-white/[0.07] transition-all">
+          <div className="bg-white/5 border border-white/10 rounded-[32px] md:rounded-[40px] p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 group hover:bg-white/[0.07] transition-all h-full">
             <div className="flex items-center gap-6">
-              <div className={`p-5 rounded-3xl ${stats.stockWarning > 0 ? "bg-orange-500/10 text-orange-400" : "bg-green-500/10 text-green-400"}`}>
-                <Package size={28} />
+              <div className={`p-4 sm:p-5 rounded-2xl sm:rounded-3xl ${stats.stockWarning > 0 ? "bg-orange-500/10 text-orange-400" : "bg-green-500/10 text-green-400"}`}>
+                <Package size={24} />
               </div>
               <div>
-                <h4 className="text-xl font-bold text-white">Stock Status</h4>
-                <p className="text-sm text-gray-500">
+                <h4 className="text-lg sm:text-xl font-bold text-white">Stock Status</h4>
+                <p className="text-xs sm:text-sm text-gray-500">
                   {stats.stockWarning > 0 
                     ? `${stats.stockWarning} items are low on stock!` 
                     : "All inventory is healthy."}
@@ -207,14 +206,14 @@ export default function AdminDashboard() {
         </Link>
 
         {/* Quick Report */}
-        <div className="bg-white/5 border border-white/10 rounded-[40px] p-8 flex items-center justify-between group hover:bg-white/[0.07] transition-all">
+        <div className="bg-white/5 border border-white/10 rounded-[32px] md:rounded-[40px] p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 group hover:bg-white/[0.07] transition-all h-full">
           <div className="flex items-center gap-6">
-            <div className="p-5 bg-primary/10 text-primary rounded-3xl">
-              <TrendingUp size={28} />
+            <div className="p-4 sm:p-5 bg-primary/10 text-primary rounded-2xl sm:rounded-3xl">
+              <TrendingUp size={24} />
             </div>
             <div>
-              <h4 className="text-xl font-bold text-white">Growth Metric</h4>
-              <p className="text-sm text-gray-500">Net profitability is {stats.profit > 0 ? "positive" : "negative"} this period.</p>
+              <h4 className="text-lg sm:text-xl font-bold text-white">Growth Metric</h4>
+              <p className="text-xs sm:text-sm text-gray-500">Net profitability is {stats.profit > 0 ? "positive" : "negative"} this period.</p>
             </div>
           </div>
           <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-500">

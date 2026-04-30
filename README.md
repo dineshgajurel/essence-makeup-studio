@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Essence Unisex Studio Dashboard
+
+Elevating Beauty, Naturally. This is the official admin management panel for Essence Unisex Studio.
 
 ## Getting Started
 
