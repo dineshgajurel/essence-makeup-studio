@@ -35,8 +35,9 @@ export default function Footer() {
             </a>
           </div>
         </div>
-        <div className="text-center pt-8 border-t border-white/10 text-gray-500 text-sm">
-          &copy; 2026 Essence Unisex Studio. All Rights Reserved.
+        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10 text-gray-500 text-sm gap-4">
+          <div>&copy; 2026 Essence Unisex Studio. All Rights Reserved.</div>
+          <div>Made with ❤️ for Beauty Lovers</div>
         </div>
       </div>
     </footer>
