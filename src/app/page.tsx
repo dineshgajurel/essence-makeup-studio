@@ -48,35 +48,41 @@ export default function Home() {
           <p className="text-center text-gray-500 mb-12 text-lg">
             Tailored for everyone, inspired by nature.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-bg-light p-10 md:p-12 rounded-2xl text-center border border-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <div className="text-5xl mb-6">🍃</div>
-              <h3 className="text-2xl font-medium text-text-dark mb-4">
-                Natural Glow
-              </h3>
-              <p className="text-gray-600">
-                Subtle, everyday makeup that enhances your true features with an
-                earthy touch.
-              </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="bg-bg-light p-8 rounded-2xl text-center border border-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col items-center justify-center">
+              <div className="text-4xl mb-4">✂️</div>
+              <h3 className="text-xl font-medium text-text-dark mb-2">Hairdressing</h3>
+              <p className="text-gray-600 text-sm">Expert cuts, styling, and treatments for all hair types.</p>
             </div>
-            <div className="bg-bg-light p-10 md:p-12 rounded-2xl text-center border border-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <div className="text-5xl mb-6">🏔️</div>
-              <h3 className="text-2xl font-medium text-text-dark mb-4">
-                Bridal & Groom
-              </h3>
-              <p className="text-gray-600">
-                Comprehensive packages for your special day, embracing the
-                beauty of the Himalayas.
-              </p>
+            <div className="bg-bg-light p-8 rounded-2xl text-center border border-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col items-center justify-center">
+              <div className="text-4xl mb-4">💅</div>
+              <h3 className="text-xl font-medium text-text-dark mb-2">Nail Painting & Design</h3>
+              <p className="text-gray-600 text-sm">Beautiful, long-lasting nail art and extensions.</p>
             </div>
-            <div className="bg-bg-light p-10 md:p-12 rounded-2xl text-center border border-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
-              <div className="text-5xl mb-6">✨</div>
-              <h3 className="text-2xl font-medium text-text-dark mb-4">
-                Glamour Studio
-              </h3>
-              <p className="text-gray-600">
-                Bold, creative looks for events, photoshoots, and parties.
-              </p>
+            <div className="bg-bg-light p-8 rounded-2xl text-center border border-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col items-center justify-center">
+              <div className="text-4xl mb-4">💄</div>
+              <h3 className="text-xl font-medium text-text-dark mb-2">Makeup</h3>
+              <p className="text-gray-600 text-sm">Professional makeup for any occasion, from natural to glamour.</p>
+            </div>
+            <div className="bg-bg-light p-8 rounded-2xl text-center border border-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col items-center justify-center">
+              <div className="text-4xl mb-4">🦶</div>
+              <h3 className="text-xl font-medium text-text-dark mb-2">Manicure & Pedicure</h3>
+              <p className="text-gray-600 text-sm">Complete nail and skin care for your hands and feet.</p>
+            </div>
+            <div className="bg-bg-light p-8 rounded-2xl text-center border border-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col items-center justify-center">
+              <div className="text-4xl mb-4">🧔</div>
+              <h3 className="text-xl font-medium text-text-dark mb-2">Beard Grooming</h3>
+              <p className="text-gray-600 text-sm">Precision beard trimming, shaping, and conditioning.</p>
+            </div>
+            <div className="bg-bg-light p-8 rounded-2xl text-center border border-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col items-center justify-center">
+              <div className="text-4xl mb-4">🫧</div>
+              <h3 className="text-xl font-medium text-text-dark mb-2">Facewash & Cleansing</h3>
+              <p className="text-gray-600 text-sm">Deep cleansing routines to refresh and rejuvenate your skin.</p>
+            </div>
+            <div className="bg-bg-light p-8 rounded-2xl text-center border border-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col items-center justify-center">
+              <div className="text-4xl mb-4">💧</div>
+              <h3 className="text-xl font-medium text-text-dark mb-2">HydraFacial</h3>
+              <p className="text-gray-600 text-sm">Advanced hydration therapy for a radiant complexion.</p>
             </div>
           </div>
         </div>
