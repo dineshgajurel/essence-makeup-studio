@@ -66,10 +66,10 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10 text-gray-500 text-sm gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/10 text-gray-500 text-sm gap-4 text-center md:text-left">
           <div>&copy; 2026 Essence Unisex Studio. All Rights Reserved.</div>
-          <div className="flex items-center gap-1">
-            Made with ❤️ for your inner & outer beauty | Developed by{" "}
+          <div className="flex flex-col sm:flex-row items-center gap-1">
+            <span>Made with ❤️ for your inner & outer beauty | Developed by</span>
             <a 
               href="https://www.gajureldns.com.np/" 
               target="_blank" 
