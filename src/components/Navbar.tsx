@@ -29,7 +29,7 @@ export default function Navbar() {
           <Link href="#home">
             <Image
               src="/logo.png"
-              alt="Essance Logo"
+              alt="Essence Logo"
               width={120}
               height={50}
               className="h-12 w-auto object-contain"

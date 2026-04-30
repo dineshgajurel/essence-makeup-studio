@@ -121,13 +121,16 @@ export default function BookingForm() {
                     className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-text-dark focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all appearance-none cursor-pointer"
                   >
                     <option value="" disabled>Select a service...</option>
-                    <option value="Hairdressing">Hairdressing</option>
-                    <option value="Nail painting and design">Nail painting and design</option>
-                    <option value="makeup">makeup</option>
-                    <option value="medicure,pedicure">medicure,pedicure</option>
-                    <option value="beard">beard</option>
-                    <option value="facewsh">facewsh</option>
-                    <option value="hydra">hydra</option>
+                    <option value="Hair (keratin,cutting,color,nanoplex,smoothing)">Hair (keratin, cutting, color, nanoplex, smoothing)</option>
+                    <option value="Makeup (bridal/party)">Makeup (bridal/party)</option>
+                    <option value="Lashes extensions">Lashes extensions</option>
+                    <option value="Manicure pedicure">Manicure pedicure</option>
+                    <option value="Nail extensions">Nail extensions</option>
+                    <option value="Waxing">Waxing</option>
+                    <option value="Facial">Facial</option>
+                    <option value="Hydra facial">Hydra facial</option>
+                    <option value="Makeup photoshoot">Makeup photoshoot</option>
+                    <option value="Jewelry photoshoot">Jewelry photoshoot</option>
                   </select>
                 </div>
 
