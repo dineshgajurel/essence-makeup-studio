@@ -16,7 +16,7 @@ export default function Footer() {
             <p className="text-gray-400">Elevating Beauty, Naturally.</p>
           </div>
           <div>
-            <h4 className="text-xl text-secondary mb-6 font-medium">
+            <h4 className="text-xl text-primary mb-6 font-medium">
               Essence Unisex Studio
             </h4>
             <p className="text-gray-300 mb-2">Ghataghar complex, 3rd floor</p>
@@ -24,7 +24,7 @@ export default function Footer() {
             <p className="text-gray-300">9762116374</p>
           </div>
           <div>
-            <h4 className="text-xl text-secondary mb-6 font-medium">
+            <h4 className="text-xl text-primary mb-6 font-medium">
               Stay Connected
             </h4>
             <a href="https://www.tiktok.com/@essence.makeup.st" className="block text-gray-300 hover:text-primary mb-2 transition-colors">
